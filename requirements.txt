@@ -4,3 +4,6 @@ requests
 rich
 python-dotenv
 matplotlib
+fastapi
+uvicorn
+aiofiles
