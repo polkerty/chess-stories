@@ -117,7 +117,6 @@ async def main_async(args: argparse.Namespace) -> int:
         model=args.model,
         position_prompt=position_prompt,
         concurrency=args.concurrency,
-        max_output_tokens=args.position_max_output_tokens,
     )
 
     # Winner prediction stats + (optional) plot
@@ -134,7 +133,6 @@ async def main_async(args: argparse.Namespace) -> int:
         results=results,
         move_clocks=move_clocks,
         final_prompt_template=final_prompt,
-        max_output_tokens=args.final_max_output_tokens,
     )
 
     show_summary_tables(stats, results, final_text, final_in, final_out, pred_stats, plot_path)

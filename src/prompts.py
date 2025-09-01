@@ -14,7 +14,8 @@ Return a compact JSON object (no backticks) with these fields and nothing else:
   "comment": "≤25 words single-sentence note about the chosen move",
   "winner_pred": "White|Black|Draw"
 }}
-Be concise and do not exceed the word limits.
+Be concise and do not exceed the word limits. Keep in mind that it's possible for people to time out, 
+so clocks should be a factor, along with the position itself, in your prediction.
 
 Context:
 - FEN: {fen}
