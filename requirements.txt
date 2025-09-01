@@ -1,0 +1,6 @@
+openai
+python-chess
+requests
+rich
+python-dotenv
+matplotlib

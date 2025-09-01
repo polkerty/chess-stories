@@ -1,0 +1,44 @@
+--- a/analyze.py
++++ b/analyze.py
+@@
+-"""
+-analyze.py — Lichess game analyzer (parallel OpenAI calls)
++"""
++analyze.py — Lichess game analyzer (parallel OpenAI calls)
+ 
+ Improvements in this version:
+ - Handles 12-char Lichess "full ids" by canonicalizing to 8-char ids for export.
+ - Falls back to {base}.pgn download if the export endpoint 404s.
+ - Loads OPENAI_API_KEY (and optional LICHESS_TOKEN) via python-dotenv.
+ 
+ Usage:
+   pip install -U openai python-chess requests rich python-dotenv
+   echo "OPENAI_API_KEY=sk-..." > .env
+-  python analyze.py https://lichess.org/uLHo0b8iWH4o --concurrency 10
++  # Defaults: phase 2 -> gpt5-mini, phase 3 -> gpt5-thinking
++  python analyze.py https://lichess.org/uLHo0b8iWH4o --concurrency 10
+ """
+@@
+ def build_arg_parser() -> argparse.ArgumentParser:
+     p = argparse.ArgumentParser(description="Analyze a Lichess game with the OpenAI API (parallel per-position).")
+     p.add_argument("url_or_id", help="Lichess game URL (e.g., https://lichess.org/abcdefgh) or raw game id.")
+     p.add_argument("--concurrency", type=int, default=10, help="Max parallel OpenAI calls (default: 10).")
+     p.add_argument("--limit", type=int, default=0, help="Limit to first N positions (0 = all).")
+     p.add_argument("--include-evals", action="store_true", help="Request eval numbers in PGN export (not used in prompts).")
+ 
+-    p.add_argument("--model", default="gpt-4o-mini", help="Model for per-position analysis.")
+-    p.add_argument("--final-model", default="gpt-4o-mini", help="Model for final summary.")
++    # Defaults: different models per phase
++    p.add_argument("--model", default="gpt5-mini",
++                   help="Model for per-position analysis (phase 2). Default: gpt5-mini.")
++    p.add_argument("--final-model", default="gpt5-thinking",
++                   help="Model for final summary (phase 3). Default: gpt5-thinking.")
+ 
+     p.add_argument("--position-prompt-file", help="Path to custom template for position analysis.")
+     p.add_argument("--final-prompt-file", help="Path to custom template for the final summary.")
+     p.add_argument("--position-max-output-tokens", type=int, default=300)
+     p.add_argument("--final-max-output-tokens", type=int, default=800)
+     p.add_argument("--temperature", type=float, default=0.2)
+ 
+     p.add_argument("--lichess-token", help="Optional Lichess API token (env LICHESS_TOKEN also supported).")
+     return p
